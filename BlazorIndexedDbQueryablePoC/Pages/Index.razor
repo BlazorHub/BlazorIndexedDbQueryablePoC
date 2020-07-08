@@ -1,0 +1,27 @@
+﻿@page "/"
+@inject IIndexedDB _db2
+
+@if (People!=null)
+{
+	foreach (Person p in People)
+	{
+		<table>
+			<tr>
+				<td>@p.FirstName</td>
+				<td>@p.LastName</td>
+			</tr>
+		</table>
+	}
+}
+
+@code
+{
+	IEnumerable<Person> People;
+
+	protected override async Task OnInitializedAsync()
+	{
+		IStore<Person> table = _db2.Store<Person>(/*"Employees"*/);
+		await table.AddAsync(new Person { FirstName="Ja2",LastName="On2" });
+		People = await table.Where(x => x.FirstName=="Ja2").ToArrayAsync();
+	}
+}
